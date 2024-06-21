@@ -16,8 +16,11 @@ object App{
 
   def main(args: Array[String]): Unit = {
     println(saludo())
+    val obj = new Itinerario()
 
-    println(vuelosCurso)
+    println(obj.itinerarios(vuelosCurso, aeropuertosCurso)("CLO", "SVCS")
+
+    //println(vuelosCurso)
     println(
       withWarmer(new Warmer.Default) measure {
         (1 to 100000000).toArray
