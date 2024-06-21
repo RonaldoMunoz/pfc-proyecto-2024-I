@@ -32,28 +32,18 @@ class Itinerario() {
     //y devuelve una función que devuelve los tres (si los hay) itinerarios que minimizan el tiempo total de viaje
     def calcularDuracionVuelo(vuelo: Vuelo): Int = {
       val aeropuertoOrigen = aeropuertos.find(_.Cod == vuelo.Org).get
-      // se busca el aeropuerto de origen cuyo codigo sea igual al codigo de origen del vuelo
-
       val aeropuertoDestino = aeropuertos.find(_.Cod == vuelo.Dst).get
-      //  se está buscando un aeropuerto cuyo código (Cod) sea igual al código de destino (Dst) del vuelo.
 
       val salidaEnMinutos = (vuelo.HS * 60) + vuelo.MS
-      // está calculando la hora de salida de un vuelo en minutos.
       val llegadaEnMinutos = (vuelo.HL * 60) + vuelo.ML
 
-
       val diferenciaGMT = (aeropuertoDestino.GMT - aeropuertoOrigen.GMT)/100
-      // Por lo tanto, esta línea de código está calculando la diferencia de tiempo entre el aeropuerto de origen y el aeropuerto de destino,
       val diferenciaGMTEnMinutos = (diferenciaGMT * 60).toInt
-      // y esta línea de código está convirtiendo esa diferencia de tiempo en minutos.
+
       val duracionEnMinutos = llegadaEnMinutos - (salidaEnMinutos + diferenciaGMTEnMinutos)
-      // Por lo tanto, esta línea de código está calculando la duración de un vuelo en minutos.
+
       if (duracionEnMinutos < 0) duracionEnMinutos + 1440 else duracionEnMinutos
     }
-      // se debe a que la duración se calcula en un formato de 24 horas, y si la duración es negativa,
-      // significa que el vuelo ha
-      // pasado al día siguiente. Agregar 1440 minutos (que es el número total de minutos en un día)
-      // ajusta la duración al valor correcto para el día siguiente.
 
     def calcularTiempoEspera(vuelo1: Vuelo, vuelo2: Vuelo): Int = {
 
@@ -88,21 +78,15 @@ class Itinerario() {
     def minimoEscalas(cod1: String, cod2: String): List[List[Vuelo]] = {
       def calcularEscalas(itinerario: List[Vuelo]): Int = {
         val escExp = itinerario.count(v => v.Dst != cod2)
-        // calcula cada escala (cada vuelo que no termine en cod2 es una escala)
         val escTec = itinerario.map(v => v.Esc)
-        // calcula las escalas tenicas de cada vuelo
         escExp + escTec.sum
       }
 
       def encontrarMenor(pivote: List[Vuelo], its: List[List[Vuelo]]): Boolean = {
         its.forall(it => calcularEscalas(pivote) <= calcularEscalas(it))
       }
-      // devuelve true si para cada vuelo del itinerario el pivote tiene
-      //                      menos escalas
 
       def buscarVuelo(busqueda: List[Vuelo], its: List[List[Vuelo]]): List[Vuelo] = {
-        //buscan el primer itinerario en its que tiene el mismo número de escalas
-        // que el itinerario busqueda y que tiene menos vuelos que busqueda.
         val primero = its.find(it => calcularEscalas(it) == calcularEscalas(busqueda) && it.length < busqueda.length)
 
         primero match {
@@ -126,6 +110,7 @@ class Itinerario() {
       val itsAll = itinerarios(vuelos, aeropuertos)(cod1, cod2)
       minimoEscalasAux(itsAll, itsAll)
     }
+
     minimoEscalas
   }
 
