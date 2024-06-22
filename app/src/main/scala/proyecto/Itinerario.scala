@@ -29,7 +29,7 @@ class Itinerario {
       val salidaEnMinutos = vuelo.HS * 60 + vuelo.MS
       val llegadaEnMinutos = vuelo.HL * 60 + vuelo.ML
 
-      val diferenciaGMT = (aeropuertoDestino.GMT - aeropuertoOrigen.GMT) / 100
+      val diferenciaGMT = ((aeropuertoDestino.GMT - aeropuertoOrigen.GMT) / 100).toInt
       val diferenciaGMTEnMinutos = diferenciaGMT * 60
 
       val duracionEnMinutos = llegadaEnMinutos - (salidaEnMinutos + diferenciaGMTEnMinutos)
@@ -58,36 +58,36 @@ class Itinerario {
   }
 
   def itinerariosEscalas(vuelos: Vuelos, aeropuertos: Aeropuertos): (String, String) => List[List[Vuelo]] = {
-    def calcularEscalas(itinerario: List[Vuelo]): Int = {
+    def calcularEscalas(itinerario: List[Vuelo], cod2: String): Int = {
       val escalasExp = itinerario.count(_.Dst != cod2)
       val escalasTec = itinerario.map(_.Esc)
       escalasExp + escalasTec.sum
     }
 
-    def encontrarMenor(pivote: List[Vuelo], its: List[List[Vuelo]]): Boolean = {
-      its.forall(calcularEscalas(pivote) <= calcularEscalas(_))
+    def encontrarMenor(pivote: List[Vuelo], its: List[List[Vuelo]], cod2: String): Boolean = {
+      its.forall(it => calcularEscalas(pivote, cod2) <= calcularEscalas(it, cod2))
     }
 
-    def buscarVuelo(busqueda: List[Vuelo], its: List[List[Vuelo]]): List[Vuelo] = {
-      its.find(it => calcularEscalas(it) == calcularEscalas(busqueda) && it.length < busqueda.length).getOrElse(busqueda)
+    def buscarVuelo(busqueda: List[Vuelo], its: List[List[Vuelo]], cod2: String): List[Vuelo] = {
+      its.find(it => calcularEscalas(it, cod2) == calcularEscalas(busqueda, cod2) && it.length < busqueda.length).getOrElse(busqueda)
     }
 
-    def minimoEscalasAux(its: List[List[Vuelo]], itsFiltrada: List[List[Vuelo]]): List[List[Vuelo]] = {
+    def minimoEscalasAux(its: List[List[Vuelo]], itsFiltrada: List[List[Vuelo]], cod2: String): List[List[Vuelo]] = {
       its match {
         case Nil => Nil
         case h :: t =>
-          if (encontrarMenor(h, itsFiltrada)) {
-            val menor = buscarVuelo(h, itsFiltrada)
-            menor :: minimoEscalasAux(t, itsFiltrada.filter(_ != menor))
+          if (encontrarMenor(h, itsFiltrada, cod2)) {
+            val menor = buscarVuelo(h, itsFiltrada, cod2)
+            menor :: minimoEscalasAux(t, itsFiltrada.filter(_ != menor), cod2)
           } else {
-            minimoEscalasAux(t, itsFiltrada)
+            minimoEscalasAux(t, itsFiltrada, cod2)
           }
       }
     }
 
     def minimoEscalas(cod1: String, cod2: String): List[List[Vuelo]] = {
       val itsAll = itinerarios(vuelos, aeropuertos)(cod1, cod2)
-      minimoEscalasAux(itsAll, itsAll)
+      minimoEscalasAux(itsAll, itsAll, cod2)
     }
     minimoEscalas
   }
@@ -100,7 +100,7 @@ class Itinerario {
       val salidaEnMinutos = vuelo.HS * 60 + vuelo.MS
       val llegadaEnMinutos = vuelo.HL * 60 + vuelo.ML
 
-      val diferenciaGMT = (aeropuertoDestino.GMT - aeropuertoOrigen.GMT) / 100
+      val diferenciaGMT = ((aeropuertoDestino.GMT - aeropuertoOrigen.GMT) / 100).toInt
       val diferenciaGMTEnMinutos = diferenciaGMT * 60
 
       val duracionEnMinutos = llegadaEnMinutos - (salidaEnMinutos + diferenciaGMTEnMinutos)

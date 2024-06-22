@@ -19,9 +19,8 @@ object App{
     val obj = new Itinerario()
 
     println(obj.itinerarios(vuelosCurso, aeropuertosCurso)("CLO", "SVCS"))
-    print()
 
-    //println(vuelosCurso)
+    println(vuelosCurso)
     println(
       withWarmer(new Warmer.Default) measure {
         (1 to 100000000).toArray
