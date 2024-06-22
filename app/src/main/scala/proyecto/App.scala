@@ -19,6 +19,7 @@ object App{
     val obj = new Itinerario()
 
     println(obj.itinerarios(vuelosCurso, aeropuertosCurso)("CLO", "SVCS"))
+    print()
 
     //println(vuelosCurso)
     println(
