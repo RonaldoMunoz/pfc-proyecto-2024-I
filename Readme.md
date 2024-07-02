@@ -1,3 +1,4 @@
-# Repositorio base
+# Proyecto Final PFC
 
-Este repositorio tiene las configuraciones y librerías necesarias para trabajar concurrencia
+Yeifer Ronaldo Muñoz Valencia : 2278665
+Juan Carlos Rojas Quintero : 2359358
